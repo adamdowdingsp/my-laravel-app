@@ -1,0 +1,32 @@
+name: deployment
+
+on:
+  push:
+    branches: [ master ]
+  pull_request: 
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository #Clones the repository into the GitHub Actions runner
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx #Prepares the runner for building Docker images
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker Compose # Starts services and runs any tests that exit upon completion (commands to execute in docker-compose.yml)
+      run: docker-compose -f docker-compose.yml build
+
+    - name: Run tests
+      run: | # For now, as we don't have any tests in our project we'll just start and stop the services in this step.
+        docker-compose -f docker-compose.yml up -d
+        docker-compose -f docker-compose.yml down
+
+
+
+
+
+
